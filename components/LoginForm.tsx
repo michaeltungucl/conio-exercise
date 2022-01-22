@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
+import Router, { useRouter } from 'next/router';
 import styles from '../styles/LoginForm.module.css';
 
-interface Details {
-  name: String,
-  password: String
+export interface Details {
+  email: string,
+  password: string
 }
 
 interface Props {
-  login: () => void,
-  error: String
+  login: (details: Details) => void,
+  error: string
 }
 
 const LoginForm: React.FC<Props> = ({ login, error }) => {
   const [details, setDetails] = useState({email: '', password: ''});
+  const router = useRouter();
 
-  const submitHandler = e => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login(details);
+    router.push('/landing')
   }
 
   return (

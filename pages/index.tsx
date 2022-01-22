@@ -3,15 +3,11 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import React, { useState } from 'react';
 import LoginForm from '../components/LoginForm';
+import {Details} from '../components/LoginForm';
 
 const adminUser = {
   email: 'tung@hotmail.it',
   password: 'tung123456'
-}
-
-interface User {
-  email: String,
-  password: String
 }
 
 interface Props {
@@ -19,10 +15,10 @@ interface Props {
 }
 
 const Home: NextPage<Props> = () => {
-  const [user, setUser] = useState<User>({email: '', password: ''})
-  const [error, setError] = useState<String>('');
+  const [user, setUser] = useState<Details>({email: '', password: ''});
+  const [error, setError] = useState<string>('');
 
-  const login = (details: {email: String, password: String}) => {
+  const login = (details: {email: string, password: string}) => {
     if(details.email === adminUser.email && details.password === adminUser.password) {
       console.log('logged in')
       setError('');
