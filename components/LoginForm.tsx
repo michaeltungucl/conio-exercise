@@ -19,7 +19,7 @@ const LoginForm: React.FC<Props> = ({ login, error }) => {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login(details);
-    router.push('/landing')
+    router.push('/landing');
   }
 
   return (

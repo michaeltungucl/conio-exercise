@@ -3,7 +3,7 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import React, { useState } from 'react';
 import LoginForm from '../components/LoginForm';
-import {Details} from '../components/LoginForm';
+import { Details } from '../components/LoginForm';
 
 const adminUser = {
   email: 'tung@hotmail.it',
@@ -29,13 +29,6 @@ const Home: NextPage<Props> = () => {
     } else {
       setError('Details do not match')
     }
-  }
-
-  const logout = () => {
-    setUser({
-      email: '',
-      password: ''
-    })
   }
 
   return (
