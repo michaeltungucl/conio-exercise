@@ -1,14 +1,9 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginForm from '../components/LoginForm';
 import { Details } from '../components/LoginForm';
-
-const adminUser = {
-  email: 'tung@hotmail.it',
-  password: 'tung123456'
-}
 
 interface Props {
   login: () => void;
@@ -18,9 +13,13 @@ const Home: NextPage<Props> = () => {
   const [user, setUser] = useState<Details>({email: '', password: ''});
   const [error, setError] = useState<string>('');
 
+  useEffect(() => {
+    localStorage.setItem('email', 'tung@hotmail.it');
+    localStorage.setItem('password', 'tung123456');
+  }, [])
+
   const login = (details: {email: string, password: string}) => {
-    if(details.email === adminUser.email && details.password === adminUser.password) {
-      console.log('logged in')
+    if(details.email === localStorage.getItem('email') && details.password === localStorage.getItem('password')) {
       setError('');
       setUser({
         email: details.email,

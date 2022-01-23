@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/Landing.module.css';
 
 interface Props {
-  currencies: CurrenciesMetadata
+  currencies?: CurrenciesMetadata
 }
 
 interface CurrencyMetadata {
@@ -39,7 +39,8 @@ type Currency = "AUD" |
 "THB" |
 "TRY" |
 "TWD" |
-"USD";
+"USD" |
+"";
 
 const USD_FX = {
   AUD: 1.39,
@@ -68,21 +69,22 @@ const USD_FX = {
   THB: 32.99,
   TRY: 13.45,
   TWD: 27.71,
+  USD: 1
 }
 
 type CurrenciesMetadata = Record<Currency, CurrencyMetadata>
 
 const Landing: React.FC<Props> = ({}) => {
   const [currencies, setCurrencies] = useState<CurrenciesMetadata>();
+  const [prevCurrency, setPrevCurrency] = useState<Currency>('USD');
   const [currency, setCurrency] = useState<Currency>('USD');
-  const [btcBalance, setBtcBalance] = useState(2.5);
-  const [moneyBalance, setMoneyBalance] = useState(1000000);
+  const [btcBalance, setBtcBalance] = useState(3);
+  const [moneyBalance, setMoneyBalance] = useState(500000);
 
   const onChangeCurrency = (e: any) => {
+    setPrevCurrency(currency);
     setCurrency(e.target.value);
   }
-  // console.log('currencies', currencies);
-  // console.log('last', currencies && (currencies[currency]).last);
 
   const getData = async () => {
     fetch('https://blockchain.info/ticker')
@@ -92,15 +94,34 @@ const Landing: React.FC<Props> = ({}) => {
       })
       .catch(err => console.log('Error:', err))
   } 
+
+  const plusBtc = () => {
+    if (currencies && (moneyBalance < currencies[currency].buy)) {
+      alert('not enough money to buy bitcoins')
+    } else {
+      setBtcBalance(btcBalance + 1);
+      (currencies && setMoneyBalance(moneyBalance - currencies[currency].buy));
+    }
+  }
   
+  const minusBtc = () => {
+    if (btcBalance > 0) {
+      setBtcBalance(btcBalance - 1);
+      (currencies && setMoneyBalance(moneyBalance + currencies[currency].sell));
+    } else {
+      alert('no more bitcoins to sell')
+    }
+  }
+
   useEffect(() => {
+    setMoneyBalance(moneyBalance / USD_FX[prevCurrency] * USD_FX[currency]);
     getData();
-  }, [currency])
+  }, [currency]);
 
   return (currencies && currency) ? (
     <div className={styles.landing}>
       <h2>Balance: {btcBalance} btc</h2>
-      <h2>Your Wallet: {moneyBalance} {currency}</h2>
+      <h2>Your Wallet: {Math.round(moneyBalance * 100) / 100} {currency}</h2>
       <select className={styles.select} value={currency} onChange={onChangeCurrency}>
         {
           Object.entries(currencies).map(([k, v]) => (
@@ -109,10 +130,10 @@ const Landing: React.FC<Props> = ({}) => {
         }
       </select>
       <div className={styles.buttons}>
-        <button className={styles.buy} onClick={() => setBtcBalance(btcBalance + 1)}>
+        <button className={styles.buy} onClick={plusBtc}>
           <p className={styles.p}>{`BUY for ${(currencies[currency]).buy} ${currency}`}</p>
         </button>
-        <button className={styles.sell}>
+        <button className={styles.sell} onClick={minusBtc}>
           <p className={styles.p}>{`SELL for ${(currencies[currency]).sell} ${currency}`}</p>
         </button>
       </div>
