@@ -4,6 +4,7 @@ import styles from '../styles/Home.module.css';
 import React, { useState, useEffect } from 'react';
 import LoginForm from '../components/LoginForm';
 import { Details } from '../components/LoginForm';
+import Router, { useRouter } from 'next/router';
 
 interface Props {
   login: () => void;
@@ -12,6 +13,7 @@ interface Props {
 const Home: NextPage<Props> = () => {
   const [user, setUser] = useState<Details>({email: '', password: ''});
   const [error, setError] = useState<string>('');
+  const router = useRouter();
 
   useEffect(() => {
     localStorage.setItem('email', 'tung@hotmail.it');
@@ -25,6 +27,7 @@ const Home: NextPage<Props> = () => {
         email: details.email,
         password: details.password
       })
+      router.push('/landing');
     } else {
       setError('Details do not match')
     }

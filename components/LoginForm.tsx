@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Router, { useRouter } from 'next/router';
 import styles from '../styles/LoginForm.module.css';
 
 export interface Details {
@@ -14,12 +13,11 @@ interface Props {
 
 const LoginForm: React.FC<Props> = ({ login, error }) => {
   const [details, setDetails] = useState({email: '', password: ''});
-  const router = useRouter();
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login(details);
-    router.push('/landing');
+    setDetails({email: '', password: ''})
   }
 
   return (
